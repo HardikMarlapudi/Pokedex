@@ -1,69 +1,72 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from "react";
 
 const Pokedex = () => {
 
-    const [searchPokemon, setSearchPokemon] = useState('');
+    const [searchPokemon, setSearchPokemon] = useState("");
     const [pokemonData, setPokemonData] = useState(null);
 
-    useEffect(() => {
-        const catchPokemon = async (name) => {
-            try {
-                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-                const data = await response.json();
-                setPokemonData(data);
-            } catch (error) {
-                console.error("Error cannot fetch pokemon: ", error);
-            }
-        };
-        catchPokemon();
-    }, []);
+   const findPokemon = async () => {
 
-    if(document.getElementById("search") == "") {
-        window.alert("Please enter a pokemon name!");
-        return;
-    }
+        if(!searchPokemon.trim()) {
+            alert("Please enter a pokemon name.");
+            return;
+        }
 
-    const findPokemon = async () => {
         try {
             const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${searchPokemon.toLowerCase()}`);
             const data = await response.json();
             setPokemonData(data);
         } catch (error) {
-            console.error("Error cannot fetch pokemon: ", error);
+            console.error("Error cannot fetch pokemon data.", error);
         }
-    };
+    }
 
     return (
         <>
-        <center><img id="imageTitle" alt="image" src="../Pokédex_logo.png"></img></center>
-            
-        <div className="container">
+            <div className="min-h-screen bg-gray-200 flex flex-col items-center p-6">
 
-            <input id="searchPokemon" type="text" placeholder="Search Pokemon..." value={searchPokemon} onChange={(event) => setSearchPokemon(event.target.value)} />
-            <button id="searchButton" type="button" onClick={findPokemon}>Search</button>
+                <img src="Pokedex_logo.png" alt="Pokedex" className="w-64 mb-8"/>
 
-        </div>
+                <div className="flex gap-4 mb-10">
+                    <input type="text" placeholder="Search Pokemon..." value={searchPokemon} onChange={(e) => setSearchPokemon(e.target.value)}
+                    className="px-4 py-2 rounded-lg border border-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400 cursor-pointer"
+                    />
 
-            {pokemonData && (
-                <div className="pokemon-card">
-                <h3>{pokemonData.name.toUpperCase()}</h3>
-                <img 
-                    src={pokemonData.sprites.front_default}
-                    alt={pokemonData.name}
-                />
-                <p><strong>Height: </strong> {pokemonData.height} ft</p>
-                <p><strong>Weight: </strong> {pokemonData.weight} lbs</p>
+                    <button onClick={findPokemon} className="px-5 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition cursor-pointer">
+                        Search
+                    </button>
+                </div>
 
-                <h4>Abilities</h4>
-                
-                {pokemonData.abilities.map((a, index) => (
-                    <li key={index}>{a.ability.name}</li>
-                ))}
-                
+                {pokemonData && (
+                    <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
+                        <h3 className="text-2xl font-bold mb-3 uppercase">
+                            {pokemonData.name}
+                        </h3>
+
+                        <img src={pokemonData.sprites.front_default} alt={pokemonData.name} className="inline-flex text-2xl font-bold mb-3" />
+                        
+                        <p className="text-gray-700">
+                            <strong>Height:</strong> {pokemonData.height} ft
+                        </p>
+
+                        <p className="text-gray-700 mb-4">
+                            <strong>Weight:</strong> {pokemonData.weight} lbs
+                        </p>
+
+                        <h4 className="text-lg font-semibold mb-2">Abilities</h4>
+
+                        <ul className="space-y-1">
+                            {pokemonData.abilities.map((a) => (
+                                <li key={a.ability.name} className="capitalize">
+                                    {a.ability.name}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
-        )}
-     </>
+        </>
     );
-};
+}
 
 export default Pokedex;
