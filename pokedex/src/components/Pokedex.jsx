@@ -46,11 +46,11 @@ const Pokedex = () => {
                         <img src={pokemonData.sprites.front_default} alt={pokemonData.name} className="inline-flex text-2xl font-bold mb-3" />
                         
                         <p className="text-gray-700">
-                            <strong>Height:</strong> {pokemonData.height} ft
+                            <strong>Height:</strong> {pokemonData.height * 0.328084} ft
                         </p>
 
                         <p className="text-gray-700 mb-4">
-                            <strong>Weight:</strong> {pokemonData.weight} lbs
+                            <strong>Weight:</strong> {pokemonData.weight * 0.22462} lbs
                         </p>
 
                         <h4 className="text-lg font-semibold mb-2">Abilities</h4>
